@@ -7,11 +7,17 @@ verify_ssl = true
 
 [packages]
 flask = "*"
-psycopg2-binary = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
 python-dotenv = "*"
 gunicorn = "*"
+autoenv = "*"
+psycopg2 = "*"
+flask-script = "*"
+psycopg2-binary = "*"
+requests = "*"
+nltk = "*"
+beautifulsoup4 = "*"
 
 [requires]
 python_version = "3.8"
