@@ -6,8 +6,13 @@ class Config(object):
     DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
-    SECRET_KEY = 'this-really-needs-to-be-changed'
+
+    SECRET_KEY = os.environ['SECRET_KEY']
+    FLASK_APP = os.environ['FLASK_APP']
+    FLASK_ENV = os.environ['FLASK_ENV']
+
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
 class ProductionConfig(Config):
