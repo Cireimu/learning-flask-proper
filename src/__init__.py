@@ -1,40 +1,10 @@
-import os
-from flask import Flask, render_template, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+# -*- coding: utf-8 -*-
 
-
-db = SQLAlchemy()
-
-
-def create_app():
-    app = Flask(__name__)
-
-    app.config.from_object('config.Config')
-
-    app.config.from_object(os.environ['APP_SETTINGS'])
-
-    db.init_app(app)
-
-    login_manager = LoginManager()
-    login_manager.login_view = "auth.login"
-    login_manager.init_app(app)
-
-    from .models import User
-
-    @login_manager.user_loader
-    def load_user(user_id):
-        # since the user_id is just the primary key of our user table, use it in the query for the user
-        if user_id is not None:
-            return User.query.get(user_id)
-        print("Something Broke")
-    
-    @login_manager.unauthorized_handler
-    def unauthorized():
-        """Redirect unauthorized users to Login page."""
-        print('You must be logged in to view that page.')
-
-    from .userRouters import auth
-    app.register_blueprint(auth, url_prefix='/api/auth')
-
-    return app
+try:
+    from .main import create_app
+    from .dbhelpers import *
+    from .middleware import create_jwt
+except ImportError:
+    from .main import create_app
+    from .dbhelpers import *
+    from .middleware import create_jwt

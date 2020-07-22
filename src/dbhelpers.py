@@ -1,6 +1,6 @@
 import os
-from . import db
-from .models import User
+from .main import db
+from .models.auth import User
 
 def findUsers():
     return User.query.all()

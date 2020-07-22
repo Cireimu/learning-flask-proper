@@ -1,10 +1,9 @@
 import os
 from flask import Blueprint, request, jsonify
-
-from .models import User
-from .dbhelpers import findByUsername, findByEmail, createUser, findUserById
-from .middleware import create_jwt
-from . import db
+from src.models.auth import User
+from src.dbhelpers import findByUsername, findByEmail, createUser, findUserById
+from src.middleware import create_jwt
+from src.main import db
 
 auth = Blueprint('auth', __name__)
 

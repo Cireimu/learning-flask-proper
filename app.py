@@ -1,6 +1,5 @@
-from src import create_app
+from src.main import create_app, db
 from flask_marshmallow import Marshmallow
-from src import db
 
 app = create_app()
 
