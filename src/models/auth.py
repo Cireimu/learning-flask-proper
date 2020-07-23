@@ -16,10 +16,12 @@ class User(UserMixin, db.Model):
     created_on = db.Column(db.DateTime, index=False)
     last_login = db.Column(db.DateTime, index=False)
 
-    def __init__(self, username, email, password):
+    def __init__(self, username, email, password, address=None, phone_address=None):
         self.username = username
         self.email = email
         self.password = password
+        self.address = address
+        self.phone_address = phone_address
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
