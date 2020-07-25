@@ -1,8 +1,11 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
+from src.main import db
 from src.models.auth import User
 from src.dbhelpers import find_user_by_username, find_user_by_email
-from flask import jsonify
+from flask import jsonify, Response, request
+from functools import wraps
+from src.dbhelpers import find_user_by_email, find_user_by_username
 import json
 import jwt
 import os
@@ -26,15 +29,37 @@ def check_for_key(your_dict, key):
         return True
     return False
 
-def assign_req_values(req_dict, key):
-    new_value = None
+def assign_req_values(req_dict, key, default_data):
+    new_value = default_data
     if check_for_key(req_dict, str(key)):
         new_value = req_dict[str(key)]
     return new_value
-          
-def check_for_user(data):
-    if find_user_by_username(data) != None:
-        return jsonify({'message': 'User by that username already exists.'})
-    elif find_user_by_email(data) != None:
-        return jsonify({'message': 'User by that email already exists'})
-    return
+
+def check_for_if_user_exist_helper(help_func, term):
+    if help_func(term) != None:
+        return jsonify({'message': f'{term}: {term} is taken'}), 401
+
+def check_for_if_user_exist(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        if 'email' in request.json and 'username' in request.json:
+            email = request.json['email']
+            username = request.json['username']
+            if find_user_by_email(email) != None and find_user_by_username(username) != None:
+                return jsonify({'message': f'Email: {email} and Username: {username} are taken'}),401
+            if find_user_by_username(username) != None:
+                return jsonify({'message': f'Username: {username} is taken'}),401
+            if find_user_by_email(email) != None:
+                return jsonify({'message': f'Email: {email} is taken'}),401
+        if 'username' in request.json:
+            username = request.json['username']
+            if find_user_by_username(username) != None:
+                message = f'Username: {username} already taken'
+                return jsonify({'message': message}), 401
+        if 'email' in request.json:
+            email = request.json['email']
+            if find_user_by_email(email) != None:
+                message = f'Email: {email} already taken'
+                return jsonify({'message': message}), 401
+        return func(*args, **kwargs)
+    return decorated_function
