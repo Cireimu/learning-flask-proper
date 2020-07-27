@@ -1,7 +1,7 @@
 import os
 from flask import Blueprint, request, jsonify, make_response
 from src.models.auth import User
-from src.dbhelpers import find_user_by_username, create_user, find_user_by_id, find_user_by_email
+from src.dbhelpers import find_user_by_username, create_user, find_user_by_id, find_user_by_email, find_users
 from src.middleware import create_jwt, assign_req_values, check_for_if_user_exist
 from src.main import db
 
@@ -62,3 +62,18 @@ def update_user(id):
     db.session.commit()
 
     return jsonify(response), 200
+
+@auth.route('/', methods=['GET'])
+def get_users():
+    users = find_users()
+
+    user_array = []
+    for user in users:
+        user_array.append({
+            'id': user.id,
+            'username': user.username, 
+            'email': user.email, 
+            'address': user.address, 
+            'phone_address': user.phone_address
+        })
+    return jsonify(user_array), 200

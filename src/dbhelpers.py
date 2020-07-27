@@ -2,7 +2,7 @@ import os
 from .main import db
 from .models.auth import User
 
-def findUsers():
+def find_users():
     return User.query.all()
 
 def find_user_by_username(username):
