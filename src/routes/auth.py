@@ -76,4 +76,17 @@ def get_users():
             'address': user.address, 
             'phone_address': user.phone_address
         })
+
     return jsonify(user_array), 200
+
+@auth.route('/<int:id>', methods=['GET'])
+def get_single_users(id):
+    user = find_user_by_id(id)
+    single_user = {
+        'id': user.id, 
+        'username': user.id, 
+        'email': user.email, 
+        'address': user.address, 
+        'phone_address': user.phone_address 
+        }
+    return jsonify(single_user)
