@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
 try:
-    from .auth import User
+    from .models import User, Restaurant, Menu_Item, Review, Restaurant_Item, Restaurant_Review
 except ImportError:
-    from .auth import User
+    from .models import User, Restaurant, Menu_Item, Review, Restaurant_Item, Restaurant_Review

@@ -1,8 +1,8 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from src.main import db
-from src.models.auth import User
-from src.dbhelpers import find_user_by_username, find_user_by_email
+from src.models.models import User
+from src.dbhelpers import find_user_by_username, find_user_by_email, find_user_by_id
 from flask import jsonify, Response, request
 from functools import wraps
 from src.dbhelpers import find_user_by_email, find_user_by_username

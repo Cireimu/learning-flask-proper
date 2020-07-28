@@ -1,6 +1,6 @@
 import os
 from flask import Blueprint, request, jsonify, make_response
-from src.models.auth import User
+from src.models.models import User
 from src.dbhelpers import find_user_by_username, create_user, find_user_by_id, find_user_by_email, find_users
 from src.middleware import create_jwt, assign_req_values, check_for_if_user_exist
 from src.main import db
@@ -79,9 +79,11 @@ def get_users():
 
     return jsonify(user_array), 200
 
-@auth.route('/<int:id>', methods=['GET'])
-def get_single_users(id):
-    user = find_user_by_id(id)
+@auth.route('/<int:user_id>', methods=['GET'])
+def get_single_users(user_id):
+    user = find_user_by_id(user_id)
+    if user == None:
+        return jsonify({'message': 'User does not exist'}), 404
     single_user = {
         'id': user.id, 
         'username': user.id, 
@@ -90,3 +92,13 @@ def get_single_users(id):
         'phone_address': user.phone_address 
         }
     return jsonify(single_user)
+
+@auth.route('/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    user = find_user_by_id(user_id)
+
+    if user == None:
+        return jsonify({'message': 'User does not exist'}), 404
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({'message': 'Successfully deleted user'})
