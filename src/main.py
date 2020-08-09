@@ -30,6 +30,7 @@ def create_app():
         print("Something Broke")
 
     from src.routes.auth import auth
+    from src.routes.restaurants import restaurant
     app.register_blueprint(auth, url_prefix='/api/auth')
-
+    app.register_blueprint(restaurant, url_prefix='/api/restaurants')
     return app

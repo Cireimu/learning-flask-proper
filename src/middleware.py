@@ -63,3 +63,17 @@ def check_for_if_user_exist(func):
                 return jsonify({'message': message}), 401
         return func(*args, **kwargs)
     return decorated_function
+
+def add_restaurants_to_list(items):
+    items_list = []
+    for r in items:
+        items_list.append({
+            'id': r.id,
+            'restaurant_name': r.restaurant_name,
+            'restaurant_description': r.restaurant_description,
+            'restaurant_rating': r.restaurant_rating,
+            'restaurant_location': r.restaurant_location,
+            'restaurant_hours_of_operation': r.restaurant_hours_of_operation,
+            'restaurant_img_url = db.Column(db.String)': r.restaurant_img_url
+        })
+    return items_list

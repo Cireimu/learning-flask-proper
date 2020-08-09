@@ -1,6 +1,6 @@
 import os
 from .main import db
-from .models.models import User
+from .models.models import User, Restaurant
 
 def find_users():
     return User.query.all()
@@ -21,3 +21,9 @@ def create_user(new_user):
 def delete_user(id):
     User.query.filter_by(id=id).delete()
     return db.session.commit()
+
+def get_restaurants():
+    return Restaurant.query.all()
+
+def get_restaurant_by_id(id):
+    return Restaurant.query.filter_by(id=id).first()
