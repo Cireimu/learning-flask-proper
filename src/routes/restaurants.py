@@ -38,3 +38,25 @@ def get_all_restaurants():
 def get_single_restaurant(restaurant_id):
     single_restaurant = get_restaurant_by_id(restaurant_id)
     return jsonify(single_restaurant.serialize()), 200
+
+@restaurant.route('/<int:restaurant_id>', methods=['PUT'])
+def update_restaurant(restaurant_id):
+    req = request.json
+    r = get_restaurant_by_id(restaurant_id)
+
+    r.restaurant_name = assign_req_values(req, 'restaurant_name', r.restaurant_name)
+    r.restaurant_description = assign_req_values(req, 'restaurant_description', r.restaurant_description)
+    r.restaurant_img_url = assign_req_values(req, 'restaurant_img_url', r.restaurant_img_url)
+    r.restaurant_rating = assign_req_values(req, 'restaurant_rating', r.restaurant_rating)
+    r.restaurant_location = assign_req_values(req, 'restaurant_location', r.restaurant_location)
+    r.restaurant_hours_of_operation = assign_req_values(req, 'restaurant_hours_of_operation', r.restaurant_hours_of_operation)
+    db.session.commit()
+    return jsonify({'message': 'Successfully updated restaurant'}, r.serialize()), 201
+
+@restaurant.route('/<int:restaurant_id>', methods=['DELETE'])
+@check_for_restaurant
+def delete_restaurant(restaurant_id):
+    r = get_restaurant_by_id(restaurant_id)
+    db.session.delete(r)
+    db.session.commit()
+    return jsonify({'message': 'Successfully deleted restaurant'})
