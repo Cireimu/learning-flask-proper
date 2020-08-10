@@ -51,4 +51,12 @@ def update_restaurant(restaurant_id):
     r.restaurant_location = assign_req_values(req, 'restaurant_location', r.restaurant_location)
     r.restaurant_hours_of_operation = assign_req_values(req, 'restaurant_hours_of_operation', r.restaurant_hours_of_operation)
     db.session.commit()
-    return jsonify({'message': 'Successfuly updated restaurant'}, r.serialize()), 201
+    return jsonify({'message': 'Successfully updated restaurant'}, r.serialize()), 201
+
+@restaurant.route('/<int:restaurant_id>', methods=['DELETE'])
+@check_for_restaurant
+def delete_restaurant(restaurant_id):
+    r = get_restaurant_by_id(restaurant_id)
+    db.session.delete(r)
+    db.session.commit()
+    return jsonify({'message': 'Successfully deleted restaurant'})
