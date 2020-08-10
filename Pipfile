@@ -18,6 +18,12 @@ psycopg2-binary = "*"
 requests = "*"
 nltk = "*"
 beautifulsoup4 = "*"
+pylint = "*"
+flask-marshmallow = "*"
+flask-login = "*"
+marshmallow-sqlalchemy = "*"
+pyjwt = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.8"
