@@ -67,13 +67,14 @@ def check_for_if_user_exist(func):
 def add_restaurants_to_list(items):
     items_list = []
     for r in items:
-        items_list.append({
-            'id': r.id,
-            'restaurant_name': r.restaurant_name,
-            'restaurant_description': r.restaurant_description,
-            'restaurant_rating': r.restaurant_rating,
-            'restaurant_location': r.restaurant_location,
-            'restaurant_hours_of_operation': r.restaurant_hours_of_operation,
-            'restaurant_img_url = db.Column(db.String)': r.restaurant_img_url
-        })
+
+        items_list.append(r.serialize())
     return items_list
+
+def check_for_restaurant(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        if get_restaurant_by_id(request.view_args['restaurant_id']) == None:
+            return jsonify({'message': 'No restaurant found by specified id'}), 404
+        return func(*args, **kwargs)
+    return decorated_function

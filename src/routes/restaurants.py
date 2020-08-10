@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response
 from src.models.models import Restaurant
 from src.main import db
-from src.middleware import assign_req_values, add_restaurants_to_list, get_restaurant_by_id
+from src.middleware import assign_req_values, add_restaurants_to_list, get_restaurant_by_id, check_for_restaurant
 from src.dbhelpers import get_restaurants
 
 restaurant = Blueprint('restaurant', __name__)
@@ -34,17 +34,7 @@ def get_all_restaurants():
     return jsonify(restaurant_list), 200
     
 @restaurant.route('/<int:restaurant_id>', methods=['GET'])
+@check_for_restaurant
 def get_single_restaurant(restaurant_id):
-    restaurant = get_restaurant_by_id(restaurant_id)
-    if restaurant == None:
-        return jsonify({'message': 'Could not find restaurant'}), 404
-    single_restaurant = {
-            'id': restaurant.id,
-            'restaurant_name': restaurant.restaurant_name,
-            'restaurant_description': restaurant.restaurant_description,
-            'restaurant_rating': restaurant.restaurant_rating,
-            'restaurant_location': restaurant.restaurant_location,
-            'restaurant_hours_of_operation': restaurant.restaurant_hours_of_operation,
-            'restaurant_img_url = db.Column(db.String)': restaurant.restaurant_img_url
-        }
-    return jsonify(single_restaurant), 200
+    single_restaurant = get_restaurant_by_id(restaurant_id)
+    return jsonify(single_restaurant.serialize()), 200

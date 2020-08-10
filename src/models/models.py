@@ -56,6 +56,17 @@ class Restaurant(db.Model):
         
     def __repr__(self):
         return '<id {}>'.format(self.id)
+    
+    def serialize(self):
+        return {
+            'id': self.id,
+            'restaurant_name': self.restaurant_name,
+            'restaurant_description': self.restaurant_description,
+            'restaurant_rating': self.restaurant_rating,
+            'restaurant_location': self.restaurant_location,
+            'restaurant_hours_of_operation': self.restaurant_hours_of_operation,
+            'restaurant_img_url = db.Column(db.String)': self.restaurant_img_url
+        }
 
 class Review(db.Model):
     __tablename__ = 'reviews'
