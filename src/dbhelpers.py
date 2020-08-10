@@ -1,6 +1,6 @@
 import os
 from .main import db
-from .models.models import User, Restaurant
+from .models.models import User, Restaurant, Review
 
 def find_users():
     return User.query.all()
@@ -27,3 +27,17 @@ def get_restaurants():
 
 def get_restaurant_by_id(id):
     return Restaurant.query.filter_by(id=id).first()
+
+def get_reviews():
+    return Review.query.all()
+
+def get_review_by_id(id):
+    return Review.query.filter_by(id=id).first()
+
+def create_review(new_review):
+    db.session.add(new_review)
+    return db.session.commit()
+
+def delete_review(id):
+    Review.query.filter_by(id=id).delete()
+    return db.session.commit()

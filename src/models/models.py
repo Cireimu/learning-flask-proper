@@ -134,7 +134,7 @@ class Restaurant_Review(db.Model):
 
     def __init__(self, restaurant_id, review_id):
         self.restaurant_id = restaurant_id
-        self.review_id =review_id
+        self.review_id = review_id
 
     def __repr__(self):
         return '<id {}>'.format(self.id)

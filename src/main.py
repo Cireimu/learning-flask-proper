@@ -31,6 +31,8 @@ def create_app():
 
     from src.routes.auth import auth
     from src.routes.restaurants import restaurant
+    from src.routes.reviews import review
     app.register_blueprint(auth, url_prefix='/api/auth')
     app.register_blueprint(restaurant, url_prefix='/api/restaurants')
+    app.register_blueprint(review, url_prefix='/api/reviews')
     return app
