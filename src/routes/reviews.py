@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from src.models.models import Review
 from src.middleware import assign_req_values, check_if_restaurant_id_valid, check_if_user_id_valid
+from src.dbhelpers import get_review_by_id
 from src.main import db
 
 review = Blueprint('review', __name__)
@@ -26,4 +27,10 @@ def create_review():
     db.session.commit()
     return jsonify({'message': 'Successfuly added review'}), 200
 
+@review.route('/<int:review_id>', methods=['PUT'])
+def update_review(review_id):
+    req = request.json
+    review = get_review_by_id(review_id)
 
+    review.update(req)
+    return jsonify(review.serialize()), 200
