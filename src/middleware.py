@@ -1,10 +1,9 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from src.main import db
-from src.dbhelpers import find_user_by_username, find_user_by_email, find_user_by_id, get_restaurant_by_id
+from src.dbhelpers import find_user_by_username, find_user_by_email, find_user_by_id, get_restaurant_by_id, get_review_by_id
 from flask import jsonify, Response, request
 from functools import wraps
-from src.dbhelpers import find_user_by_email, find_user_by_username
 import json
 import jwt
 import os
@@ -120,5 +119,14 @@ def check_if_review_id_valid(func):
             review_id = request.json['review_id']
         if find_user_by_id(review_id) == None:
             return jsonify({'message': 'No review found by specified id'}), 404
+        return func(*args, **kwargs)
+    return decorated_function
+
+def check_if_review_owned_by_user(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        review = get_review_by_id(request.view_args['review_id'])
+        if request.json['user_id'] != review.user_id:
+            return jsonify({'message': 'You cannot edit reviews you do not own'})
         return func(*args, **kwargs)
     return decorated_function
