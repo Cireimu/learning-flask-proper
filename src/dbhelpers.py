@@ -28,6 +28,9 @@ def get_restaurants():
 def get_restaurant_by_id(id):
     return Restaurant.query.filter_by(id=id).first()
 
+def get_reviews_by_restaurant(id):
+    return Review.query.filter_by(restaurant_id=id).all()
+
 def get_reviews():
     return Review.query.all()
 

@@ -82,7 +82,11 @@ def check_for_restaurant(func):
 def check_if_restaurant_id_valid(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
-        restaurant_id = request.json['restaurant_id']
+        restaurant_id = None
+        if 'restaurant_id' in request.view_args:
+            restaurant_id = request.view_args['restaurant_id']
+        else:
+            restaurant_id = request.json['restaurant_id']
         if get_restaurant_by_id(restaurant_id) == None:
             return jsonify({'message': 'No restaurant found by specified id'}), 404
         return func(*args, **kwargs)
@@ -105,5 +109,4 @@ def create_review_list(review_list):
     new_list = []
     for r in review_list:
         new_list.append(r.serialize())
-    print(new_list)
     return new_list
