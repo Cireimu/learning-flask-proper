@@ -109,3 +109,16 @@ def create_review_list(review_list):
     for r in review_list:
         new_list.append(r.serialize())
     return new_list
+
+def check_if_review_id_valid(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        review_id = None
+        if 'review_id' in request.view_args:
+            review_id = request.view_args['review_id']
+        else:
+            review_id = request.json['review_id']
+        if find_user_by_id(review_id) == None:
+            return jsonify({'message': 'No review found by specified id'}), 404
+        return func(*args, **kwargs)
+    return decorated_function
