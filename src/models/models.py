@@ -87,6 +87,16 @@ class Review(db.Model):
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
+    
+    def serialize(self):
+        return {
+            'id': self.id,
+            'review_title': self.review_title,
+            'review_description': self.review_description,
+            'review_score': self.review_score,
+            'restaurant_id': self.restaurant_id,
+            'user_id': self.user_id
+        }
 
 class Menu_Item(db.Model):
     __tablename__ = 'menu_item'

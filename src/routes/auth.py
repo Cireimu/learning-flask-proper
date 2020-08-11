@@ -1,8 +1,8 @@
 import os
 from flask import Blueprint, request, jsonify, make_response
 from src.models.models import User
-from src.dbhelpers import find_user_by_username, create_user, find_user_by_id, find_user_by_email, find_users
-from src.middleware import create_jwt, assign_req_values, check_for_if_user_exist
+from src.dbhelpers import find_user_by_username, create_user, find_user_by_id, find_user_by_email, find_users, get_review_by_user_id
+from src.middleware import create_jwt, assign_req_values, check_for_if_user_exist, check_if_user_id_valid, create_review_list
 from src.main import db
 
 auth = Blueprint('auth', __name__)
@@ -102,3 +102,12 @@ def delete_user(user_id):
     db.session.delete(user)
     db.session.commit()
     return jsonify({'message': 'Successfully deleted user'})
+
+@auth.route('/<int:user_id>/reviews', methods=['GET'])
+@check_if_user_id_valid
+def get_user_reviews(user_id):
+    reviews = create_review_list(get_review_by_user_id(user_id))
+    
+    if len(reviews) == 0:
+        return jsonify({'message': 'No reviews are associated yet with this user'})
+    return jsonify(reviews)

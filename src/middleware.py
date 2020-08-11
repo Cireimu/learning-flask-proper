@@ -91,8 +91,19 @@ def check_if_restaurant_id_valid(func):
 def check_if_user_id_valid(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
-        user_id = request.json['user_id']
+        user_id = None
+        if 'user_id' in request.view_args:
+            user_id = request.view_args['user_id']
+        else:
+            user_id = request.json['user_id']
         if find_user_by_id(user_id) == None:
             return jsonify({'message': 'No user found by specified id'}), 404
         return func(*args, **kwargs)
     return decorated_function
+
+def create_review_list(review_list):
+    new_list = []
+    for r in review_list:
+        new_list.append(r.serialize())
+    print(new_list)
+    return new_list
