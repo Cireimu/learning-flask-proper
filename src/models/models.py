@@ -75,13 +75,15 @@ class Review(db.Model):
     review_title = db.Column(db.String)
     review_description = db.Column(db.String)
     review_score = db.Column(db.Integer, nullable=False)
+    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    def __init__(self, review_title, review_description, review_score, user_id):
+    def __init__(self, review_title, review_description, review_score, user_id, restaurant_id):
         self.review_title = review_title
         self.review_description = review_description
         self.review_score = review_score
         self.user_id = user_id
+        self.restaurant_id = restaurant_id
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -118,23 +120,6 @@ class Restaurant_Item(db.Model):
     def __init__(self, restaurant_id, menu_item_id):
         self.restaurant_id = restaurant_id
         self.menu_item_id = menu_item_id
-
-    def __repr__(self):
-        return '<id {}>'.format(self.id)
-
-class Restaurant_Review(db.Model):
-    __tablename__ = 'restuarant_reviews'
-
-    __table_args__ = (
-        db.PrimaryKeyConstraint('restaurant_id', 'review_id'),
-    )
-
-    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'), nullable=False)
-    review_id = db.Column(db.Integer, db.ForeignKey('reviews.id'), nullable=False)
-
-    def __init__(self, restaurant_id, review_id):
-        self.restaurant_id = restaurant_id
-        self.review_id = review_id
 
     def __repr__(self):
         return '<id {}>'.format(self.id)

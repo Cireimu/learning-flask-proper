@@ -78,3 +78,21 @@ def check_for_restaurant(func):
             return jsonify({'message': 'No restaurant found by specified id'}), 404
         return func(*args, **kwargs)
     return decorated_function
+
+def check_if_restaurant_id_valid(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        restaurant_id = request.json['restaurant_id']
+        if get_restaurant_by_id(restaurant_id) == None:
+            return jsonify({'message': 'No restaurant found by specified id'}), 404
+        return func(*args, **kwargs)
+    return decorated_function
+
+def check_if_user_id_valid(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        user_id = request.json['user_id']
+        if find_user_by_id(user_id) == None:
+            return jsonify({'message': 'No user found by specified id'}), 404
+        return func(*args, **kwargs)
+    return decorated_function
