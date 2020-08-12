@@ -117,7 +117,8 @@ def check_if_review_id_valid(func):
             review_id = request.view_args['review_id']
         else:
             review_id = request.json['review_id']
-        if find_user_by_id(review_id) == None:
+        
+        if get_review_by_id(review_id) == None:
             return jsonify({'message': 'No review found by specified id'}), 404
         return func(*args, **kwargs)
     return decorated_function
@@ -125,8 +126,16 @@ def check_if_review_id_valid(func):
 def check_if_review_owned_by_user(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
+        print(request.view_args)
         review = get_review_by_id(request.view_args['review_id'])
-        if request.json['user_id'] != review.user_id:
-            return jsonify({'message': 'You cannot edit reviews you do not own'})
+        print(review)
+        user_id = None
+        if 'user_id' in request.view_args:
+            user_id = request.view_args['user_id']
+        else:
+            user_id = request.json['user_id']
+        print(user_id)
+        if user_id != review.user_id :
+            return jsonify({'message': 'You cannot edit reviews you do not own'}), 203
         return func(*args, **kwargs)
     return decorated_function

@@ -36,3 +36,13 @@ def update_review(review_id):
 
     review.update(req)
     return jsonify(review.serialize()), 200
+
+@review.route('/<int:review_id>', methods=['DELETE'])
+@check_if_review_id_valid
+@check_if_review_owned_by_user
+def delete_review(review_id):
+    review = get_review_by_id(review_id)
+
+    db.session.delete(review)
+    db.session.commit()
+    return jsonify({'message': 'Successfully deleted review'})

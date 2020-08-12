@@ -77,6 +77,14 @@ class Restaurant(db.Model):
             'restaurant_hours_of_operation': self.restaurant_hours_of_operation,
             'restaurant_img_url = db.Column(db.String)': self.restaurant_img_url
         }
+    
+    def update(self, req):
+        self.restaurant_name = assign_req_values(req, 'restaurant_name', self.restaurant_name)
+        self.restaurant_description = assign_req_values(req, 'restaurant_description', self.restaurant_description)
+        self.restaurant_img_url = assign_req_values(req, 'restaurant_img_url', self.restaurant_img_url)
+        self.restaurant_location = assign_req_values(req, 'restaurant_location', self.restaurant_location)
+        self.restaurant_hours_of_operation = assign_req_values(req, 'restaurant_hours_of_operation', self.restaurant_hours_of_operation)
+        return db.session.commit()
 
 class Review(db.Model):
     __tablename__ = 'reviews'
