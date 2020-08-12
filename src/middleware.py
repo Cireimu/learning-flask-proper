@@ -1,5 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
+from src.models.models import User, assign_def_values
 from src.main import db
 from src.dbhelpers import find_user_by_username, find_user_by_email, find_user_by_id, get_restaurant_by_id, get_review_by_id
 from flask import jsonify, Response, request
@@ -139,3 +140,9 @@ def check_if_review_owned_by_user(func):
             return jsonify({'message': 'You cannot edit reviews you do not own'}), 203
         return func(*args, **kwargs)
     return decorated_function
+
+def create_new_user(req):
+    user_fields = {'username', 'email', 'password', 'address', 'phone_address'}
+    assign_def_values(req, user_fields, None)
+    new_user = User(username=req['username'], email=req['email'], password=req['password'], address= req['address'], phone_address=req['phone_address'])
+    return new_user

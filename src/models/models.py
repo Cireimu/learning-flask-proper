@@ -44,6 +44,18 @@ class User(db.Model):
     def check_password(self, password):
         """Check hashed password."""
         return check_password_hash(self.password, password)
+    
+    def create(self, req):
+        user_fields = {'username', 'email', 'password', 'address', 'phone_address'}
+        assign_def_values(req, user_fields, None)
+        new_user = User(username=req['username'], email=req['email'], password=req['password'], address= req['address'], phone_address=req['phone_address'])
+        return new_user
+    # def create(self, req):
+    #     username = req['username']
+    #     email = req['email']
+    #     password = req['password']
+    #     address = assign_req_values(req, "address", None)
+    #     phone_address = assign_req_values(req, "phone_address", None)
 
 class Restaurant(db.Model):
     __tablename__ = 'restaurants'
