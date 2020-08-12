@@ -1,6 +1,16 @@
 from src.main import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
+def check_for_key(your_dict, key):
+    if key in your_dict:
+        return True
+    return False
+
+def assign_req_values(req_dict, key, default_data):
+    new_value = default_data
+    if check_for_key(req_dict, str(key)):
+        new_value = req_dict[str(key)]
+    return new_value
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -67,6 +77,14 @@ class Restaurant(db.Model):
             'restaurant_hours_of_operation': self.restaurant_hours_of_operation,
             'restaurant_img_url = db.Column(db.String)': self.restaurant_img_url
         }
+    
+    def update(self, req):
+        self.restaurant_name = assign_req_values(req, 'restaurant_name', self.restaurant_name)
+        self.restaurant_description = assign_req_values(req, 'restaurant_description', self.restaurant_description)
+        self.restaurant_img_url = assign_req_values(req, 'restaurant_img_url', self.restaurant_img_url)
+        self.restaurant_location = assign_req_values(req, 'restaurant_location', self.restaurant_location)
+        self.restaurant_hours_of_operation = assign_req_values(req, 'restaurant_hours_of_operation', self.restaurant_hours_of_operation)
+        return db.session.commit()
 
 class Review(db.Model):
     __tablename__ = 'reviews'
@@ -75,16 +93,35 @@ class Review(db.Model):
     review_title = db.Column(db.String)
     review_description = db.Column(db.String)
     review_score = db.Column(db.Integer, nullable=False)
+    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    def __init__(self, review_title, review_description, review_score, user_id):
+    def __init__(self, review_title, review_description, review_score, user_id, restaurant_id):
         self.review_title = review_title
         self.review_description = review_description
         self.review_score = review_score
         self.user_id = user_id
+        self.restaurant_id = restaurant_id
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
+    
+    def serialize(self):
+        return {
+            'id': self.id,
+            'review_title': self.review_title,
+            'review_description': self.review_description,
+            'review_score': self.review_score,
+            'restaurant_id': self.restaurant_id,
+            'user_id': self.user_id
+        }
+    def update(self, req):
+        
+        self.review_title = assign_req_values(req, 'review_title', self.review_title)
+        self.review_description = assign_req_values(req, 'review_description', self.review_description)
+        self.review_score = assign_req_values(req, 'review_score', self.review_score)
+        return db.session.commit()
+
 
 class Menu_Item(db.Model):
     __tablename__ = 'menu_item'
@@ -118,23 +155,6 @@ class Restaurant_Item(db.Model):
     def __init__(self, restaurant_id, menu_item_id):
         self.restaurant_id = restaurant_id
         self.menu_item_id = menu_item_id
-
-    def __repr__(self):
-        return '<id {}>'.format(self.id)
-
-class Restaurant_Review(db.Model):
-    __tablename__ = 'restuarant_reviews'
-
-    __table_args__ = (
-        db.PrimaryKeyConstraint('restaurant_id', 'review_id'),
-    )
-
-    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'), nullable=False)
-    review_id = db.Column(db.Integer, db.ForeignKey('reviews.id'), nullable=False)
-
-    def __init__(self, restaurant_id, review_id):
-        self.restaurant_id = restaurant_id
-        self.review_id =review_id
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
