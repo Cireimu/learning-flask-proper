@@ -1,6 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
-from src.models.models import User, assign_def_values
+from .models import User
 from src.main import db
 from src.dbhelpers import find_user_by_username, find_user_by_email, find_user_by_id, get_restaurant_by_id, get_review_by_id
 from flask import jsonify, Response, request
@@ -107,7 +107,16 @@ def check_if_user_id_valid(func):
 def create_review_list(review_list):
     new_list = []
     for r in review_list:
-        new_list.append(r.serialize())
+        r = {
+            'id': r[0].id,
+            'review_title': r[0].review_title,
+            'review_description': r[0].review_description,
+            'review_score': r[0].review_score,
+            'user_id': r[0].user_id,
+            'restaurant_name': r[1].restaurant_name,
+            'restaurant_description': r[1].restaurant_description
+        }
+        new_list.append(r)
     return new_list
 
 def check_if_review_id_valid(func):
