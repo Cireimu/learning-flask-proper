@@ -38,7 +38,7 @@ def get_review_by_id(id):
     return Review.query.filter_by(id=id).first()
 
 def get_review_by_user_id(id):
-    return Review.query.filter_by(user_id=id).all()
+    return db.session.query(Review, Restaurant).outerjoin(Review, Restaurant.id==Review.restaurant_id).filter_by(user_id=id).all()
 
 def create_review(new_review):
     db.session.add(new_review)
