@@ -59,12 +59,32 @@ class User(db.Model):
 
 
 class UserSchema(Schema):
+    id = fields.Int()
     username = fields.Str()
     email = fields.Str()
     address = fields.Str()
     phone_address = fields.Str()
     created_on = fields.DateTime()
     last_login = fields.DateTime()
+
+
+class RestaurantSchema(Schema):
+    id = fields.Int()
+    restaurant_name = fields.Str()
+    restaurant_description = fields.Str()
+    restaurant_rating = fields.Int()
+    restaurant_location = fields.Str()
+    restaurant_hours_of_operation = fields.Str()
+    restaurant_img_url = fields.Str()
+
+
+class ReviewSchema(Schema):
+    id = fields.Int()
+    review_title = fields.Str()
+    review_description = fields.Str()
+    review_score = fields.Int()
+    restaurant_id = fields.Int()
+    user_id = fields.Int()
 
 
 class Restaurant(db.Model):
@@ -90,15 +110,7 @@ class Restaurant(db.Model):
         return '<id {}>'.format(self.id)
 
     def serialize(self):
-        return {
-            'id': self.id,
-            'restaurant_name': self.restaurant_name,
-            'restaurant_description': self.restaurant_description,
-            'restaurant_rating': self.restaurant_rating,
-            'restaurant_location': self.restaurant_location,
-            'restaurant_hours_of_operation': self.restaurant_hours_of_operation,
-            'restaurant_img_url = db.Column(db.String)': self.restaurant_img_url
-        }
+        return RestaurantSchema().dump(self)
 
     def update(self, req):
         self.restaurant_name = assign_req_values(
@@ -136,14 +148,7 @@ class Review(db.Model):
         return '<id {}>'.format(self.id)
 
     def serialize(self):
-        return {
-            'id': self.id,
-            'review_title': self.review_title,
-            'review_description': self.review_description,
-            'review_score': self.review_score,
-            'restaurant_id': self.restaurant_id,
-            'user_id': self.user_id
-        }
+        return ReviewSchema().dump(self)
 
     def update(self, req):
 
