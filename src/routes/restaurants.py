@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, make_response
-from src.models.models import Restaurant
+from src.models import Restaurant
 from src.main import db
 from src.middleware import assign_req_values, add_restaurants_to_list, get_restaurant_by_id, check_if_restaurant_id_valid, create_review_list
 from src.dbhelpers import get_restaurants, get_reviews_by_restaurant

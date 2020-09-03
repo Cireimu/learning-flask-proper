@@ -1,6 +1,6 @@
 import os
 from .main import db
-from .models.models import User, Restaurant, Review
+from .models import User, Restaurant, Review
 
 def find_users():
     return User.query.all()
@@ -29,10 +29,10 @@ def get_restaurant_by_id(id):
     return Restaurant.query.filter_by(id=id).first()
 
 def get_reviews_by_restaurant(id):
-    return Review.query.filter_by(restaurant_id=id).all()
+    return db.session.query(Review, Restaurant).outerjoin(Review, Restaurant.id==Review.restaurant_id).filter_by(restaurant_id=id).all()
 
 def get_reviews():
-    return Review.query.all()
+    return Review.query.join(Review, Restaurant.id==Review.restaurant_id).all()
 
 def get_review_by_id(id):
     return Review.query.filter_by(id=id).first()

@@ -1,8 +1,8 @@
 import os
 from flask import Blueprint, request, jsonify, make_response
-from src.models.models import User
+from src.models import User
 from src.dbhelpers import find_user_by_username, create_user, find_user_by_id, find_user_by_email, find_users, get_review_by_user_id
-from src.middleware import create_jwt, assign_req_values, check_for_if_user_exist, check_if_user_id_valid, create_review_list, get_review_by_id, check_if_review_id_valid, check_if_review_owned_by_user
+from src.middleware import create_jwt, assign_req_values, check_for_if_user_exist, check_if_user_id_valid, create_review_list, get_review_by_id, check_if_review_id_valid, check_if_review_owned_by_user, create_new_user
 from src.main import db
 
 auth = Blueprint('auth', __name__)
@@ -16,13 +16,7 @@ def register():
     if not all(k in req for k in required):
         return jsonify({'message': 'Missing Required Values'}), 400
     
-    username = req['username']
-    email = req['email']
-    password = req['password']
-    address = assign_req_values(req, "address", None)
-    phone_address = assign_req_values(req, "phone_address", None)
-    
-    new_user = User(username=username, email=email, password=password, address=address, phone_address=phone_address)
+    new_user = create_new_user(req)
     new_user.set_password(req['password'])
     create_user(new_user)
 
