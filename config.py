@@ -1,4 +1,5 @@
 import os
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -7,11 +8,11 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = True
 
-    SECRET_KEY = os.environ['SECRET_KEY']
-    FLASK_APP = os.environ['FLASK_APP']
-    FLASK_ENV = os.environ['FLASK_ENV']
+    SECRET_KEY = os.environ["SECRET_KEY"]
+    FLASK_APP = os.environ["FLASK_APP"]
+    FLASK_ENV = os.environ["FLASK_ENV"]
 
-    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+    SQLALCHEMY_DATABASE_URI = os.environ["DATABASE_URL"]
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
